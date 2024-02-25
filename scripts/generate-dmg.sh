@@ -1,5 +1,6 @@
 # This script requires create-dmg to be installed from https://github.com/sindresorhus/create-dmg
 BUILD_CONFIG=$1
+REBUILD_IROH=$2
 
 fail()
 {
@@ -33,10 +34,24 @@ mkdir $BUILD_ROOT
 mkdir $BUILD_FOLDER
 mkdir $INSTALLER_FOLDER
 
+DEFAULT_ARCHS="x86_64 arm64"
+
+if [ "$REBUILD_IROH" != "" ]; then
+
+echo Build iroh shared library
+./scripts/build-iroh-macos.sh $BUILD_CONFIG
+
+# Cargo unable to cross-compile so it is unable to produce "fat" binary
+# and we need to use only current platform arch.
+DEFAULT_ARCHS="$CPUTYPE"
+
+fi
+
 echo Configuring the project
 pushd $BUILD_FOLDER
-qmake $SOURCE_ROOT/moonlight-qt.pro QMAKE_APPLE_DEVICE_ARCHS="x86_64 arm64" || fail "Qmake failed!"
+qmake $SOURCE_ROOT/moonlight-qt.pro QMAKE_APPLE_DEVICE_ARCHS="$DEFAULT_ARCHS" || fail "Qmake failed!"
 popd
+
 
 echo Compiling Moonlight in $BUILD_CONFIG configuration
 pushd $BUILD_FOLDER

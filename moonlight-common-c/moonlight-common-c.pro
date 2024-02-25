@@ -34,6 +34,7 @@ win32 {
 }
 macx {
     INCLUDEPATH += $$PWD/../libs/mac/include
+    INCLUDEPATH += $$PWD/../libs_shaga/mac/include
 }
 unix:!macx {
     CONFIG += link_pkgconfig

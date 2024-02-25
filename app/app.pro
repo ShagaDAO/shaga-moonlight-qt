@@ -56,7 +56,9 @@ macx {
     INCLUDEPATH += $$PWD/../libs/mac/include
     INCLUDEPATH += $$PWD/../libs/mac/Frameworks/SDL2.framework/Versions/A/Headers
     INCLUDEPATH += $$PWD/../libs/mac/Frameworks/SDL2_ttf.framework/Versions/A/Headers
+    INCLUDEPATH += $$PWD/../libs_shaga/include/mac
     LIBS += -L$$PWD/../libs/mac/lib -F$$PWD/../libs/mac/Frameworks
+    LIBS += -L$$PWD/../libs_shaga/mac/lib
 
     # QMake doesn't handle framework-style includes correctly on its own
     QMAKE_CFLAGS += -F$$PWD/../libs/mac/Frameworks
@@ -152,7 +154,7 @@ win32:!winrt {
     CONFIG += soundio discord-rpc
 }
 macx {
-    LIBS += -lssl -lcrypto -lavcodec.60 -lavutil.58 -lopus -framework SDL2 -framework SDL2_ttf
+    LIBS += -lssl -lcrypto -lavcodec.60 -lavutil.58 -lopus -liroh_net_ffi -framework SDL2 -framework SDL2_ttf
     LIBS += -lobjc -framework VideoToolbox -framework AVFoundation -framework CoreVideo -framework CoreGraphics -framework CoreMedia -framework AppKit -framework Metal -framework QuartzCore
 
     # For libsoundio
@@ -548,7 +550,7 @@ macx {
     APP_BUNDLE_RESOURCES.files = moonlight.icns
     APP_BUNDLE_RESOURCES.path = Contents/Resources
 
-    APP_BUNDLE_FRAMEWORKS.files = $$files(../libs/mac/Frameworks/*.framework, true) $$files(../libs/mac/lib/*.dylib, true)
+    APP_BUNDLE_FRAMEWORKS.files = $$files(../libs/mac/Frameworks/*.framework, true) $$files(../libs/mac/lib/*.dylib, true) $$files(../libs_shaga/mac/lib/*.dylib, true)
     APP_BUNDLE_FRAMEWORKS.path = Contents/Frameworks
 
     APP_BUNDLE_PLIST.files = $$OUT_PWD/Info.plist
