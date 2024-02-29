@@ -22,6 +22,7 @@
 #define SER_SRVCERT "srvcert"
 #define SER_CUSTOMNAME "customname"
 #define SER_NVIDIASOFTWARE "nvidiasw"
+#define SER_IROHNODEADDRESS "irohnodeaddress"
 
 NvComputer::NvComputer(QSettings& settings)
 {
@@ -39,6 +40,7 @@ NvComputer::NvComputer(QSettings& settings)
                                     settings.value(SER_MANUALPORT, QVariant(DEFAULT_HTTP_PORT)).toUInt());
     this->serverCert = QSslCertificate(settings.value(SER_SRVCERT).toByteArray());
     this->isNvidiaServerSoftware = settings.value(SER_NVIDIASOFTWARE).toBool();
+    this->irohNodeAddress = settings.value(SER_IROHNODEADDRESS).toString();
 
     int appCount = settings.beginReadArray(SER_APPLIST);
     this->appList.reserve(appCount);
@@ -92,6 +94,7 @@ void NvComputer::serialize(QSettings& settings, bool serializeApps) const
     settings.setValue(SER_MANUALPORT, manualAddress.port());
     settings.setValue(SER_SRVCERT, serverCert.toPem());
     settings.setValue(SER_NVIDIASOFTWARE, isNvidiaServerSoftware);
+    settings.setValue(SER_IROHNODEADDRESS, irohNodeAddress);
 
     // Avoid deleting an existing applist if we couldn't get one
     if (!appList.isEmpty() && serializeApps) {
@@ -117,7 +120,8 @@ bool NvComputer::isEqualSerialized(const NvComputer &that) const
            this->manualAddress == that.manualAddress &&
            this->serverCert == that.serverCert &&
            this->isNvidiaServerSoftware == that.isNvidiaServerSoftware &&
-           this->appList == that.appList;
+           this->appList == that.appList &&
+           this->irohNodeAddress == that.irohNodeAddress;
 }
 
 void NvComputer::sortAppList()
@@ -211,6 +215,8 @@ NvComputer::NvComputer(NvHTTP& http, QString serverInfo)
     this->state = NvComputer::CS_ONLINE;
     this->pendingQuit = false;
     this->isSupportedServerVersion = CompatFetcher::isGfeVersionSupported(this->gfeVersion);
+
+    this->irohNodeAddress = NvHTTP::getXmlString(serverInfo, "IrohNodeAddress");
 }
 
 bool NvComputer::wake() const
@@ -552,6 +558,7 @@ bool NvComputer::update(const NvComputer& that)
     ASSIGN_IF_CHANGED(gpuModel);
     ASSIGN_IF_CHANGED_AND_NONNULL(serverCert);
     ASSIGN_IF_CHANGED_AND_NONEMPTY(displayModes);
+    ASSIGN_IF_CHANGED(irohNodeAddress);
 
     if (!that.appList.isEmpty()) {
         // updateAppList() handles merging client-side attributes

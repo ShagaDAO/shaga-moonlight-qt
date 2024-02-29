@@ -1378,11 +1378,13 @@ bool Session::startConnectionAsync()
 
     QByteArray hostnameStr = m_Computer->activeAddress.address().toLatin1();
     QByteArray siAppVersion = m_Computer->appVersion.toLatin1();
+    QByteArray irohAddr = m_Computer->irohNodeAddress.toLatin1();
 
     SERVER_INFORMATION hostInfo;
     hostInfo.address = hostnameStr.data();
     hostInfo.serverInfoAppVersion = siAppVersion.data();
     hostInfo.serverCodecModeSupport = m_Computer->serverCodecModeSupport;
+    hostInfo.irohNodeAddress = irohAddr.data();
 
     // Older GFE versions didn't have this field
     QByteArray siGfeVersion;

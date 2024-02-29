@@ -113,6 +113,9 @@ public:
     QSslCertificate serverCert;
     QVector<NvApp> appList;
     bool isNvidiaServerSoftware;
+
+    // Iroh
+    QString irohNodeAddress;
     // Remember to update isEqualSerialized() when adding fields here!
 
     // Synchronization
