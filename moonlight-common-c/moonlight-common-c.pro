@@ -21,16 +21,20 @@ include(../globaldefs.pri)
 win32 {
     contains(QT_ARCH, i386) {
         INCLUDEPATH += $$PWD/../libs/windows/include/x86
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/x86
     }
     contains(QT_ARCH, x86_64) {
         INCLUDEPATH += $$PWD/../libs/windows/include/x64
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/x64
     }
     contains(QT_ARCH, arm64) {
         INCLUDEPATH += $$PWD/../libs/windows/include/arm64
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/arm64
     }
 
     INCLUDEPATH += $$PWD/../libs/windows/include
-    DEFINES += HAS_QOS_FLOWID=1 HAS_PQOS_FLOWID=1
+    INCLUDEPATH += $$PWD/../libs_shaga/windows/include
+    DEFINES += HAS_QOS_FLOWID=1 HAS_PQOS_FLOWID=1     
 }
 macx {
     INCLUDEPATH += $$PWD/../libs/mac/include

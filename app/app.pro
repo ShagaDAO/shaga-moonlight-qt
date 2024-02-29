@@ -36,18 +36,26 @@ win32 {
     contains(QT_ARCH, i386) {
         LIBS += -L$$PWD/../libs/windows/lib/x86
         INCLUDEPATH += $$PWD/../libs/windows/include/x86
+        LIBS += -L$$PWD/../libs_shaga/windows/lib/x86
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/x86
     }
     contains(QT_ARCH, x86_64) {
         LIBS += -L$$PWD/../libs/windows/lib/x64
         INCLUDEPATH += $$PWD/../libs/windows/include/x64
+        LIBS += -L$$PWD/../libs_shaga/windows/lib/x64
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/x64
     }
     contains(QT_ARCH, arm64) {
         LIBS += -L$$PWD/../libs/windows/lib/arm64
         INCLUDEPATH += $$PWD/../libs/windows/include/arm64
+        LIBS += -L$$PWD/../libs_shaga/windows/lib/arm64
+        INCLUDEPATH += $$PWD/../libs_shaga/windows/include/arm64
     }
 
     INCLUDEPATH += $$PWD/../libs/windows/include
+    INCLUDEPATH += $$PWD/../libs_shaga/windows/include
     LIBS += ws2_32.lib winmm.lib dxva2.lib ole32.lib gdi32.lib user32.lib d3d9.lib dwmapi.lib dbghelp.lib
+    LIBS += iroh_net_ffi.dll.lib
 
     # Work around a conflict with math.h inclusion between SDL and Qt 6
     DEFINES += _USE_MATH_DEFINES
