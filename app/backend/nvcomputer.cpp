@@ -22,6 +22,7 @@
 #define SER_SRVCERT "srvcert"
 #define SER_CUSTOMNAME "customname"
 #define SER_NVIDIASOFTWARE "nvidiasw"
+#define IROH_NODE_ADDRESS "irohnodeaddress"
 
 NvComputer::NvComputer(QSettings& settings)
 {
@@ -31,6 +32,7 @@ NvComputer::NvComputer(QSettings& settings)
     this->macAddress = settings.value(SER_MAC).toByteArray();
     this->localAddress = NvAddress(settings.value(SER_LOCALADDR).toString(),
                                    settings.value(SER_LOCALPORT, QVariant(DEFAULT_HTTP_PORT)).toUInt());
+    this->irohNodeAddress = settings.value(IROH_NODE_ADDRESS).toString();
     this->remoteAddress = NvAddress(settings.value(SER_REMOTEADDR).toString(),
                                     settings.value(SER_REMOTEPORT, QVariant(DEFAULT_HTTP_PORT)).toUInt());
     this->ipv6Address = NvAddress(settings.value(SER_IPV6ADDR).toString(),
@@ -80,6 +82,7 @@ void NvComputer::serialize(QSettings& settings, bool serializeApps) const
 
     settings.setValue(SER_NAME, name);
     settings.setValue(SER_CUSTOMNAME, hasCustomName);
+    settings.setValue(IROH_NODE_ADDRESS, irohNodeAddress);
     settings.setValue(SER_UUID, uuid);
     settings.setValue(SER_MAC, macAddress);
     settings.setValue(SER_LOCALADDR, localAddress.address());
@@ -116,6 +119,7 @@ bool NvComputer::isEqualSerialized(const NvComputer &that) const
            this->ipv6Address == that.ipv6Address &&
            this->manualAddress == that.manualAddress &&
            this->serverCert == that.serverCert &&
+           this->irohNodeAddress == that.irohNodeAddress &&
            this->isNvidiaServerSoftware == that.isNvidiaServerSoftware &&
            this->appList == that.appList;
 }
@@ -144,6 +148,12 @@ NvComputer::NvComputer(NvHTTP& http, QString serverInfo)
         for (const QString& macOctet : macOctets) {
             this->macAddress.append((char) macOctet.toInt(nullptr, 16));
         }
+    }
+
+    QString nodeAddress = NvHTTP::getXmlString(serverInfo, "IrohNodeAddress");
+
+    if (!nodeAddress.isEmpty()) {
+        this->irohNodeAddress = nodeAddress;
     }
 
     QString codecSupport = NvHTTP::getXmlString(serverInfo, "ServerCodecModeSupport");
@@ -550,6 +560,7 @@ bool NvComputer::update(const NvComputer& that)
     ASSIGN_IF_CHANGED(isNvidiaServerSoftware);
     ASSIGN_IF_CHANGED(maxLumaPixelsHEVC);
     ASSIGN_IF_CHANGED(gpuModel);
+    ASSIGN_IF_CHANGED_AND_NONEMPTY(irohNodeAddress);
     ASSIGN_IF_CHANGED_AND_NONNULL(serverCert);
     ASSIGN_IF_CHANGED_AND_NONEMPTY(displayModes);
 

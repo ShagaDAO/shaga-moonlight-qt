@@ -822,7 +822,7 @@ private:
 
         // Create initial newComputer using HTTP serverinfo with no pinned cert
         NvComputer* newComputer = new NvComputer(http, serverInfo);
-
+        qInfo() << "iroh node address" << newComputer->irohNodeAddress;
         // Check if we have a record of this host UUID to pull the pinned cert
         NvComputer* existingComputer;
         {
@@ -844,6 +844,7 @@ private:
             // Update the polled computer with the HTTPS information
             NvComputer httpsComputer(http, serverInfo);
             newComputer->update(httpsComputer);
+            qInfo() << "iroh node address 2 --" << newComputer->irohNodeAddress;
         }
 
         // Update addresses depending on the context
@@ -948,7 +949,8 @@ private:
                     emit computerAddCompleted(true, false);
                 }
 
-                // Tell our client about this new PC
+                // Tell our client about this new
+                qInfo() << " Iroh node address 3 ---> " << newComputer->irohNodeAddress;
                 emit computerStateChanged(newComputer);
             }
         }

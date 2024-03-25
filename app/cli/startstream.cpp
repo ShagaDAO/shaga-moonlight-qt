@@ -102,6 +102,7 @@ public:
                     m_TimeoutTimer->stop();
                     if (isNotStreaming() || isStreamingApp(app)) {
                         m_State = StateStartSession;
+                        qInfo() << "Session start " << m_Computer->irohNodeAddress;
                         session = new Session(m_Computer, app, m_Preferences);
                         emit q->sessionCreated(app.name, session);
                     } else {

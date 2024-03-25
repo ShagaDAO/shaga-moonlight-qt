@@ -643,7 +643,9 @@ void FFmpegVideoDecoder::addVideoStats(VIDEO_STATS& src, VIDEO_STATS& dst)
     else {
         // Our logic to determine if RTT is valid depends on us never
         // getting an RTT of 0. ENet currently ensures RTTs are >= 1.
-        SDL_assert(dst.lastRtt > 0);
+        dst.lastRtt = 0;
+        dst.lastRttVariance = 0;
+        //SDL_assert(dst.lastRtt > 0);
     }
 
     Uint32 now = SDL_GetTicks();
@@ -1554,7 +1556,8 @@ int FFmpegVideoDecoder::submitDecodeUnit(PDECODE_UNIT du)
     // Flip stats windows roughly every second
     if (SDL_TICKS_PASSED(SDL_GetTicks(), m_ActiveWndVideoStats.measurementStartTimestamp + 1000)) {
         // Update overlay stats if it's enabled
-        if (Session::get()->getOverlayManager().isOverlayEnabled(Overlay::OverlayDebug)) {
+        //if (Session::get()->getOverlayManager().isOverlayEnabled(Overlay::OverlayDebug)) {
+        {
             VIDEO_STATS lastTwoWndStats = {};
             addVideoStats(m_LastWndVideoStats, lastTwoWndStats);
             addVideoStats(m_ActiveWndVideoStats, lastTwoWndStats);

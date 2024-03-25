@@ -43,7 +43,7 @@ Session* AppModel::createSessionForApp(int appIndex)
 {
     Q_ASSERT(appIndex < m_VisibleApps.count());
     NvApp app = m_VisibleApps.at(appIndex);
-
+    qInfo() << " Session from App model " << m_Computer->irohNodeAddress;
     return new Session(m_Computer, app);
 }
 

@@ -76,7 +76,8 @@ SOURCES += \
     $$COMMON_C_DIR/src/VideoDepacketizer.c \
     $$COMMON_C_DIR/src/VideoStream.c
 HEADERS += \
-    $$COMMON_C_DIR/src/Limelight.h
+    $$COMMON_C_DIR/src/Limelight.h \
+    moonlight-common-c/src/irohnet.h
 INCLUDEPATH += \
     $$RS_DIR \
     $$ENET_DIR/include \
@@ -92,3 +93,17 @@ CONFIG(debug, debug|release) {
 *-g++ {
     QMAKE_CFLAGS += -std=gnu99
 }
+win32: QMAKE_EXTENSION_SHLIB = dll.a
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../release/ -l:libiroh_net_ffi.dll
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../debug/ -l:libiroh_net_ffi.dll
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../release/liblibiroh_net_ffi.dll.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../debug/liblibiroh_net_ffi.dll.a
+
+win32: LIBS += -L$$PWD/./ -l:libiroh_net_ffi.dll
+
+INCLUDEPATH += $$PWD/''
+DEPENDPATH += $$PWD/''

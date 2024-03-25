@@ -562,6 +562,7 @@ Session::Session(NvComputer* computer, NvApp& app, StreamingPreferences *prefere
       m_AudioSampleCount(0),
       m_DropAudioEndTime(0)
 {
+    qInfo() << " Session computer " << computer->irohNodeAddress ;
 }
 
 bool Session::initialize()
@@ -1332,7 +1333,7 @@ bool Session::startConnectionAsync()
     // if we decide to stream a different game.
     Q_ASSERT(m_Computer->currentGameId == 0 ||
              m_Computer->currentGameId == m_App.id);
-
+    qInfo() << m_Computer->irohNodeAddress << " ----> 3";
     bool enableGameOptimizations;
     if (m_Computer->isNvidiaServerSoftware) {
         // GFE will set all settings to 720p60 if it doesn't recognize
@@ -1360,6 +1361,8 @@ bool Session::startConnectionAsync()
 
     try {
         NvHTTP http(m_Computer);
+        qInfo() << m_Computer->irohNodeAddress << " ----> 2";
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "1  Iroh Node Address %s", m_Computer->irohNodeAddress.toStdString().data());
         http.startApp(m_Computer->currentGameId != 0 ? "resume" : "launch",
                       m_Computer->isNvidiaServerSoftware,
                       m_App.id, &m_StreamConfig,
@@ -1383,7 +1386,8 @@ bool Session::startConnectionAsync()
     hostInfo.address = hostnameStr.data();
     hostInfo.serverInfoAppVersion = siAppVersion.data();
     hostInfo.serverCodecModeSupport = m_Computer->serverCodecModeSupport;
-
+    hostInfo.irohNodeAddress = strdup(m_Computer->irohNodeAddress.toLatin1().data());
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Iroh Node Address %s", hostInfo.irohNodeAddress);
     // Older GFE versions didn't have this field
     QByteArray siGfeVersion;
     if (!m_Computer->gfeVersion.isEmpty()) {
@@ -1411,7 +1415,7 @@ bool Session::startConnectionAsync()
     }
     else {
         // Use 1392 byte video packets by default
-        m_StreamConfig.packetSize = 1392;
+        m_StreamConfig.packetSize = 1000;
 
         // getActiveAddressReachability() does network I/O, so we only attempt to check
         // reachability if we've already contacted the PC successfully.
@@ -1433,7 +1437,7 @@ bool Session::startConnectionAsync()
             break;
         }
     }
-
+    qInfo() << hostInfo.irohNodeAddress;
     int err = LiStartConnection(&hostInfo, &m_StreamConfig, &k_ConnCallbacks,
                                 &m_VideoCallbacks,
                                 m_AudioDisabled ? nullptr : &m_AudioCallbacks,

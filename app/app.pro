@@ -561,3 +561,18 @@ macx {
 
 VERSION = "$$cat(version.txt)"
 DEFINES += VERSION_STR=\\\"$$cat(version.txt)\\\"
+
+INCLUDEPATH += $$PWD/../moonlight-common-c/moonlight-common-c/src
+DEPENDPATH += $$PWD/../moonlight-common-c/moonlight-common-c/src
+
+INCLUDEPATH += $$PWD/''
+DEPENDPATH += $$PWD/''
+
+INCLUDEPATH += $$PWD/''
+DEPENDPATH += $$PWD/''
+win32: QMAKE_EXTENSION_SHLIB = dll.a
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../release/ -llibiroh_net_ffi.dll
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../debug/ -llibiroh_net_ffi.dll
+
+INCLUDEPATH += $$PWD/''
+DEPENDPATH += $$PWD/''
