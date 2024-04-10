@@ -197,7 +197,7 @@ if not x%QT_PATH:\5.=%==x%QT_PATH% (
     set WINDEPLOYQT_ARGS=--no-qmltooling --no-virtualkeyboard
 ) else (
     rem Qt 6.5
-    set WINDEPLOYQT_ARGS=--no-system-d3d-compiler --skip-plugin-types qmltooling,generic
+  set WINDEPLOYQT_ARGS=--no-system-d3d-compiler
 )
 
 echo Deploying Qt dependencies
