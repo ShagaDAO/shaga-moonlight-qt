@@ -1429,7 +1429,7 @@ bool Session::startConnectionAsync()
             // It looks like our route to this PC is over a VPN, so cap at 1024 bytes.
             // Treat it as remote even if the target address is in RFC 1918 address space.
             m_StreamConfig.streamingRemotely = STREAM_CFG_REMOTE;
-            m_StreamConfig.packetSize = 1024;
+            m_StreamConfig.packetSize = 1000;
             break;
         default:
             // If we don't have reachability info, let moonlight-common-c decide.
@@ -1449,6 +1449,8 @@ bool Session::startConnectionAsync()
     }
 
     emit connectionStarted();
+    Session::get()->getOverlayManager().setOverlayState(Overlay::OverlayDebug,
+                                                        !Session::get()->getOverlayManager().isOverlayEnabled(Overlay::OverlayDebug));
     return true;
 }
 

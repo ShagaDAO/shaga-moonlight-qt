@@ -766,7 +766,7 @@ void FFmpegVideoDecoder::stringifyVideoStats(VIDEO_STATS& stats, char* output, i
             snprintf(rttString, sizeof(rttString), "%u ms (variance: %u ms)", stats.lastRtt, stats.lastRttVariance);
         }
         else {
-            snprintf(rttString, sizeof(rttString), "N/A");
+            snprintf(rttString, sizeof(rttString), "iroh: %d ms", iroh_rtt);
         }
 
         ret = snprintf(&output[offset],
